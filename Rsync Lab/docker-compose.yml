@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  rsync-server:
+    image: alpine:latest
+    container_name: rsync-server
+    hostname: server
+    working_dir: /data
+    volumes:
+      - ./server/data:/data
+      - ./server/rsyncd_scenario1.conf:/etc/rsyncd.conf  # Swap for scenario2
+    command: sh -c "apk add --no-cache rsync && rsync --daemon --no-detach --config=/etc/rsyncd.conf"
+    networks:
+      mynet:
+        aliases:
+          - server
+
+  client1:
+    build: ./client1
+    container_name: client1
+    hostname: client1
+    networks:
+      mynet:
+        aliases:
+          - client1
+
+  client2:
+    build: ./client2
+    container_name: client2
+    hostname: client2
+    networks:
+      mynet:
+        aliases:
+          - client2
+
+networks:
+  mynet:
+    driver: bridge
