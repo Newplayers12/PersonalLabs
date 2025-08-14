@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  ssh-server:
+    build: ./server
+    container_name: f2b_ssh_server
+    hostname: ssh-server
+    ports:
+      - "2222:22"
+    volumes:
+      - ./fail2ban-profiles/:/profiles:ro
+      - f2b_log_data:/var/log
+    environment:
+      - F2B_PROFILE=medium-ban
+    command: /start.sh
+
+  ssh-client:
+    build: ./client
+    container_name: f2b_ssh_client
+    depends_on:
+      - ssh-server
+    environment:
+      - SSH_SERVER=ssh-server
+    stdin_open: true
+    tty: true
+
+volumes:
+  f2b_log_data:

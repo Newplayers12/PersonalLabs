@@ -1,0 +1,11 @@
+[DEFAULT]
+banaction = iptables-multiport
+bantime = -1
+
+[sshd]
+enabled = true
+port    = ssh
+logpath = /var/log/auth.log
+backend = auto
+maxretry = 3
+findtime = 600
